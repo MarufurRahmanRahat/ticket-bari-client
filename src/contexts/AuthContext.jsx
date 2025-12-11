@@ -10,9 +10,13 @@ import {
     sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../firebase/Firebase.config";
+import axios from "axios";
 
 
 const AuthContext = createContext();
+
+// Configuration of axios base URL
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -26,24 +30,39 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(localStorage.getItem('token') || null);
 
     // Register with Email & Password
     const registerWithEmail = async (email, password, name, photoURL) => {
         setLoading(true);
         try {
+            // 1. Register with Firebase
             const result = await createUserWithEmailAndPassword(auth, email, password);
 
-            // Update profile with name and photo
+            // 2. Update profile with name and photo
             await updateProfile(result.user, {
                 displayName: name,
                 photoURL: photoURL,
             });
 
-            // Refresh user data
+            // 3. Register user in backend MongoDB
+            const response = await axios.post(`${API_URL}/auth/register`, {
+                name,
+                email,
+                photoURL,
+                firebaseUID: result.user.uid,
+                role: 'user', // Default role
+            });
+
+            // 4. Save JWT token
+            const jwtToken = response.data.data.token;
+            localStorage.setItem('token', jwtToken);
+            setToken(jwtToken);
+
+            // 5. Set user with backend data
             setUser({
                 ...result.user,
-                displayName: name,
-                photoURL: photoURL,
+                ...response.data.data.user,
             });
 
             return result;
@@ -54,23 +73,90 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+
     // Login with Email & Password
-    const loginWithEmail = (email, password) => {
+    const loginWithEmail = async (email, password) => {
         setLoading(true);
-        return signInWithEmailAndPassword(auth, email, password);
+        try {
+            // 1. Login with Firebase
+            const result = await signInWithEmailAndPassword(auth, email, password);
+
+            // 2. Login to backend
+            const response = await axios.post(`${API_URL}/auth/login`, {
+                email,
+                firebaseUID: result.user.uid,
+            });
+
+            // 3. Save JWT token
+            const jwtToken = response.data.data.token;
+            localStorage.setItem('token', jwtToken);
+            setToken(jwtToken);
+
+            // 4. Set user with backend data
+            setUser({
+                ...result.user,
+                ...response.data.data.user,
+            });
+
+            return result;
+        } catch (error) {
+            throw error;
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Google Sign In
-    const loginWithGoogle = () => {
+    const loginWithGoogle = async () => {
         setLoading(true);
-        const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider);
+        try {
+            const provider = new GoogleAuthProvider();
+
+            // 1. Sign in with Google
+            const result = await signInWithPopup(auth, provider);
+
+            // 2. Register/Login to backend
+            const response = await axios.post(`${API_URL}/auth/register`, {
+                name: result.user.displayName,
+                email: result.user.email,
+                photoURL: result.user.photoURL,
+                firebaseUID: result.user.uid,
+                role: 'user',
+            });
+
+            // 3. Save JWT token
+            const jwtToken = response.data.data.token;
+            localStorage.setItem('token', jwtToken);
+            setToken(jwtToken);
+
+            // 4. Set user with backend data
+            setUser({
+                ...result.user,
+                ...response.data.data.user,
+            });
+
+            return result;
+        } catch (error) {
+            throw error;
+        } finally {
+            setLoading(false);
+        }
     };
 
+
     // Logout
-    const logout = () => {
+    const logout = async () => {
         setLoading(true);
-        return signOut(auth);
+        try {
+            await signOut(auth);
+            localStorage.removeItem('token');
+            setToken(null);
+            setUser(null);
+        } catch (error) {
+            throw error;
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Password Reset
@@ -80,17 +166,38 @@ export const AuthProvider = ({ children }) => {
 
     // Observer for auth state changes
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (currentUser && token) {
+                try {
+                    // Fetch user data from backend
+                    const response = await axios.get(`${API_URL}/auth/me`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    setUser({
+                        ...currentUser,
+                        ...response.data.data.user,
+                    });
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    setUser(currentUser);
+                }
+            } else {
+                setUser(null);
+            }
             setLoading(false);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [token]);
+
 
     const authInfo = {
         user,
         loading,
+        token,
         registerWithEmail,
         loginWithEmail,
         loginWithGoogle,

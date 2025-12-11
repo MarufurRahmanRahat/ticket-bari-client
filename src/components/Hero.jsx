@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    // Mock data - Replace with actual API calls
     const heroSlides = [
         {
             id: 1,
