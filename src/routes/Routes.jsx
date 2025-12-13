@@ -9,6 +9,10 @@ import Register from "../pages/Register";
 import PrivateRoute from "./PrivateRoute";
 import AllTicketsPage from "../pages/AllTicketsPage";
 import TicketDetailsPage from "../pages/TicketDetailsPage";
+import DashboardLayout from "../layouts/DashboardLayout";
+import UserProfile from "../pages/dashboard/UserProfile";
+import MyBookings from "../pages/dashboard/MyBookings";
+import TransactionHistory from "../pages/dashboard/TransactionHistory";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,23 @@ const router = createBrowserRouter([
         path: '/ticket/:id',
         element: <PrivateRoute><TicketDetailsPage /></PrivateRoute>
       },
+      {
+        path: '/dashboard',
+        element: <PrivateRoute><DashboardLayout /></PrivateRoute>
+      },
+      {
+        path: 'profile',
+        element: <PrivateRoute><UserProfile /></PrivateRoute>
+      },
+      {
+        path: 'my-bookings',
+        element: <PrivateRoute><MyBookings /></PrivateRoute>
+      },
+      {
+        path: 'transactions',
+        element: <PrivateRoute><TransactionHistory /></PrivateRoute>
+      },
+
     ]
   },
 ]);
