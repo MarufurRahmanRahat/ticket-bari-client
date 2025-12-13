@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import PrivateRoute from "./PrivateRoute";
 import AllTicketsPage from "../pages/AllTicketsPage";
+import TicketDetailsPage from "../pages/TicketDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: '/all-tickets',
         element: <PrivateRoute><AllTicketsPage /></PrivateRoute>
+      },
+      {
+        path: '/ticket/:id',
+        element: <PrivateRoute><TicketDetailsPage /></PrivateRoute>
       },
     ]
   },
