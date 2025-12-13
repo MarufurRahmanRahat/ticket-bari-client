@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ticketService } from '../services/ticketService';
 import { bookingService } from '../services/bookingService';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import {
   Bus,
@@ -19,6 +19,7 @@ import {
   Loader2,
   ArrowLeft,
 } from 'lucide-react';
+
 
 const TicketDetailsPage = () => {
   const { id } = useParams();
@@ -69,8 +70,8 @@ const TicketDetailsPage = () => {
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / 1000 / 60) % 60);
+       hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      minutes = Math.floor((difference / 1000 / 60) % 60);
       const seconds = Math.floor((difference / 1000) % 60);
 
       setCountdown({ days, hours, minutes, seconds, expired: false });

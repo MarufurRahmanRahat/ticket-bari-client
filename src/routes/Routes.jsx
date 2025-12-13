@@ -13,6 +13,11 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import UserProfile from "../pages/dashboard/UserProfile";
 import MyBookings from "../pages/dashboard/MyBookings";
 import TransactionHistory from "../pages/dashboard/TransactionHistory";
+import VendorProfile from '../pages/dashboard/vendor/VendorProfile';
+import AddTicket from '../pages/dashboard/vendor/AddTicket';
+import MyTickets from '../pages/dashboard/vendor/MyTickets';
+import BookingRequests from '../pages/dashboard/vendor/BookingRequests';
+import RevenueOverview from '../pages/dashboard/vendor/RevenueOverview';
 
 const router = createBrowserRouter([
   {
@@ -46,15 +51,35 @@ const router = createBrowserRouter([
       },
       {
         path: 'profile',
-        element: <PrivateRoute><UserProfile /></PrivateRoute>
+        element: <PrivateRoute allowedRoles={['user']}><UserProfile /></PrivateRoute>
       },
       {
         path: 'my-bookings',
-        element: <PrivateRoute><MyBookings /></PrivateRoute>
+        element: <PrivateRoute allowedRoles={['user']}><MyBookings /></PrivateRoute>
       },
       {
         path: 'transactions',
-        element: <PrivateRoute><TransactionHistory /></PrivateRoute>
+        element: <PrivateRoute allowedRoles={['user']}><TransactionHistory /></PrivateRoute>
+      },
+      {
+        path: 'vendor/profile',
+        element: <PrivateRoute allowedRoles={['vendor']}><VendorProfile /></PrivateRoute>
+      },
+      {
+        path: 'vendor/add-ticket',
+        element: <PrivateRoute allowedRoles={['vendor']}><AddTicket /></PrivateRoute>
+      },
+      {
+        path: 'vendor/my-tickets',
+        element: <PrivateRoute allowedRoles={['vendor']}><MyTickets /></PrivateRoute>
+      },
+      {
+        path: 'vendor/booking-requests',
+        element: <PrivateRoute allowedRoles={['vendor']}><BookingRequests /></PrivateRoute>
+      },
+      {
+        path: 'vendor/revenue',
+        element: <PrivateRoute allowedRoles={['vendor']}><RevenueOverview /></PrivateRoute>
       },
 
     ]

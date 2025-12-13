@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import {
   User,
@@ -10,6 +10,13 @@ import {
   Menu,
   X,
   Home,
+  Plus,
+  List,
+  Users,
+  DollarSign,
+  BarChart3,
+  Shield,
+  Settings,
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -35,6 +42,36 @@ const DashboardLayout = () => {
     { path: '/dashboard/transactions', icon: CreditCard, label: 'Transaction History' },
   ];
 
+  // Vendor sidebar items
+  const vendorMenuItems = [
+    { path: '/dashboard/vendor/profile', icon: User, label: 'Vendor Profile' },
+    { path: '/dashboard/vendor/add-ticket', icon: Plus, label: 'Add Ticket' },
+    { path: '/dashboard/vendor/my-tickets', icon: List, label: 'My Added Tickets' },
+    { path: '/dashboard/vendor/booking-requests', icon: Users, label: 'Requested Bookings' },
+    { path: '/dashboard/vendor/revenue', icon: DollarSign, label: 'Revenue Overview' },
+  ];
+
+  // Admin sidebar items
+  const adminMenuItems = [
+    { path: '/dashboard/admin/profile', icon: User, label: 'Admin Profile' },
+    { path: '/dashboard/admin/manage-tickets', icon: Ticket, label: 'Manage Tickets' },
+    { path: '/dashboard/admin/manage-users', icon: Users, label: 'Manage Users' },
+    { path: '/dashboard/admin/advertise', icon: BarChart3, label: 'Advertise Tickets' },
+  ];
+
+  // Select menu based on role
+  const getMenuItems = () => {
+    switch (user?.role) {
+      case 'vendor':
+        return vendorMenuItems;
+      case 'admin':
+        return adminMenuItems;
+      default:
+        return userMenuItems;
+    }
+  };
+
+  const menuItems = getMenuItems();
   const isActive = (path) => location.pathname === path;
 
   return (
@@ -61,7 +98,10 @@ const DashboardLayout = () => {
             <div className="p-6 border-b">
               <div className="flex items-center space-x-3">
                 <img
-                  src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.displayName || 'User'}&background=3b82f6&color=fff`}
+                  src={
+                    user?.photoURL ||
+                    `https://ui-avatars.com/api/?name=${user?.displayName || 'User'}&background=3b82f6&color=fff`
+                  }
                   alt={user?.displayName || 'User'}
                   className="w-12 h-12 rounded-full border-2 border-blue-500"
                 />
@@ -75,8 +115,8 @@ const DashboardLayout = () => {
             </div>
 
             {/* Menu Items */}
-            <nav className="flex-1 p-4 space-y-2">
-              {userMenuItems.map((item) => {
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+              {menuItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link

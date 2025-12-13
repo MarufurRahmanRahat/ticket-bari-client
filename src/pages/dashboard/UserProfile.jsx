@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 import { imageService } from '../../services/imageService';
 import toast from 'react-hot-toast';
 import { User, Mail, Image as ImageIcon, Camera, Loader2 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const UserProfile = () => {
   const { user } = useAuth();
