@@ -6,6 +6,8 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import PrivateRoute from "./PrivateRoute";
+import AllTicketsPage from "../pages/AllTicketsPage";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "register",
         Component: Register
+      },
+      {
+        path: '/all-tickets',
+        element: <PrivateRoute><AllTicketsPage /></PrivateRoute>
       },
     ]
   },
