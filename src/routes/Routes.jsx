@@ -18,6 +18,10 @@ import AddTicket from '../pages/dashboard/vendor/AddTicket';
 import MyTickets from '../pages/dashboard/vendor/MyTickets';
 import BookingRequests from '../pages/dashboard/vendor/BookingRequests';
 import RevenueOverview from '../pages/dashboard/vendor/RevenueOverview';
+import AdminProfile from "../pages/dashboard/admin/AdminProfile";
+import ManageTickets from "../pages/dashboard/admin/ManageTickets";
+import ManageUsers from "../pages/dashboard/admin/ManageUsers";
+import AdvertiseTickets from "../pages/dashboard/admin/AdvertiseTickets";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +84,22 @@ const router = createBrowserRouter([
       {
         path: 'vendor/revenue',
         element: <PrivateRoute allowedRoles={['vendor']}><RevenueOverview /></PrivateRoute>
+      },
+      {
+        path: 'admin/profile',
+        element: <PrivateRoute allowedRoles={['admin']}><AdminProfile /></PrivateRoute>
+      },
+      {
+        path: 'admin/manage-tickets',
+        element: <PrivateRoute allowedRoles={['admin']}><ManageTickets /></PrivateRoute>
+      },
+      {
+        path: 'admin/manage-users',
+        element: <PrivateRoute allowedRoles={['admin']}><ManageUsers /></PrivateRoute>
+      },
+      {
+        path: 'admin/advertise',
+        element: <PrivateRoute allowedRoles={['admin']}><AdvertiseTickets /></PrivateRoute>
       },
 
     ]
