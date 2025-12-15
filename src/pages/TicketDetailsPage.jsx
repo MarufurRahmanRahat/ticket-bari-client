@@ -70,8 +70,8 @@ const TicketDetailsPage = () => {
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-       hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      minutes = Math.floor((difference / 1000 / 60) % 60);
+      //  hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      // minutes = Math.floor((difference / 1000 / 60) % 60);
       const seconds = Math.floor((difference / 1000) % 60);
 
       setCountdown({ days, hours, minutes, seconds, expired: false });

@@ -22,12 +22,14 @@ import AddTicket from '../pages/dashboard/vendor/AddTicket';
 import MyTickets from '../pages/dashboard/vendor/MyTickets';
 import BookingRequests from '../pages/dashboard/vendor/BookingRequests';
 import RevenueOverview from '../pages/dashboard/vendor/RevenueOverview';
+import EditTicket from '../pages/dashboard/vendor/EditTicket';
 
 // Admin Dashboard
 import AdminProfile from '../pages/dashboard/admin/AdminProfile';
 import ManageTickets from '../pages/dashboard/admin/ManageTickets';
 import ManageUsers from '../pages/dashboard/admin/ManageUsers';
 import AdvertiseTickets from '../pages/dashboard/admin/AdvertiseTickets';
+
 
 
 // Error Page
@@ -156,6 +158,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute allowedRoles={['vendor']}>
             <RevenueOverview />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'vendor/edit-ticket/:id',
+        element: (
+          <PrivateRoute allowedRoles={['vendor']}>
+            <EditTicket />
           </PrivateRoute>
         ),
       },
