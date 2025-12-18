@@ -23,7 +23,7 @@ const CheckoutForm = ({ bookingId, amount, onSuccess }) => {
     try {
       // 1. Create payment intent
       const { data: intentData } = await axios.post(
-        'http://localhost:5000/api/payments/create-payment-intent',
+        'https://ticket-bari-server-psi.vercel.app/api/payments/create-payment-intent',
         { bookingId },
         {
           headers: {
@@ -50,7 +50,7 @@ const CheckoutForm = ({ bookingId, amount, onSuccess }) => {
 
       // 3. Confirm payment on backend
       const { data: confirmData } = await axios.post(
-        'http://localhost:5000/api/payments/confirm-payment',
+        'https://ticket-bari-server-psi.vercel.app/api/payments/confirm-payment',
         {
           bookingId,
           paymentIntentId: paymentIntent.id,

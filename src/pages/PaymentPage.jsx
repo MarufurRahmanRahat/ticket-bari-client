@@ -311,7 +311,7 @@ const CheckoutForm = ({ booking }) => {
       </button>
 
       <p className="text-xs text-center text-gray-500">
-        Test Card: 4242 4242 4242 4242 | Exp: Any future date | CVC: Any 3 digits
+        Test Card: 4242 4242 4242 4242 | Exp: Any future date | CVC: Any 3 digits | ZIP: Any 5 digits
       </p>
     </form>
   );
